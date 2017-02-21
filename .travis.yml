@@ -1,36 +1,43 @@
-lanaguage: android
-jdk: oraclejdk8
+sudo: true
+language: android
+before_install:
+    - nvm install 7.5.0
+    - node --version
+install:
+    - npm install -g react-native-cli
+    - npm install
+    - react-native link
 android:
     components:
         - platform-tools
         - tools
         - build-tools-23.0.1
+        - build-tools-23.0.3
         - android-23
         - extra-android-m2repository
         - extra-google-google_play_services
         - extra-google-m2repository
         - addon-google_apis-google-23
-before_install:
-    - nvm install 7.5.0
-    - node --version
-install:
-    - npm install
+    licenses:
+        - 'android-sdk-preview-license-.+'
+        - 'android-sdk-license-.+'
+        - 'google-gdk-license-.+'
 script:
-    - npm run ci
-    - cd android && ./gradlew assembleRelease # TODO: Environment/Flavor specific
+    - cd android
+    - ./gradlew assembleRelease # TODO: Environment/Flavor specific
 deploy:
     skip_cleanup: true
     provider: script
-    script: travis/deploy_script.sh
+    script: sh ../travis/deploy_script.sh
     on:
         branch: beta
 notifications:
   slack: 
     on_pull_requests: false
     template: 
-        - "%{repository} (%{commit}) build ${result} in %{duration}"
-        - "Build details: (#${build_number}) %{build_url}"
+        - "%{repository} (%{commit}) build %{result} in %{duration}"
+        - "Build details: (#%{build_number}) %{build_url}"
     rooms:
         - siliconstraits:YF2sCsWA6M4rzcxR4hxwu8G4
-    on_success: change
+    on_success: always
     on_failure: always
