@@ -33,7 +33,7 @@ deploy:
         branch: beta
 notifications:
   slack: 
-    on_pull_requests: false
+    on_pull_requests: true
     template: 
         - "%{repository} (%{commit}) build %{result} in %{duration}"
         - "Build details: (#%{build_number}) %{build_url}"
